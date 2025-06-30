@@ -469,6 +469,8 @@ async def get_order(order_id: str):
     order = await db.orders.find_one({"id": order_id})
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
+    # Remove MongoDB _id field to avoid serialization issues
+    order.pop('_id', None)
     return Order(**order)
 
 @api_router.get("/orders")

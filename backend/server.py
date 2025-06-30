@@ -391,24 +391,33 @@ async def create_order(order_data: OrderCreate, session_id: Optional[str] = None
     
     # Create Xendit invoice
     try:
+        import base64
+        
+        # Encode the secret key for basic auth
+        auth_string = f"{XENDIT_SECRET_KEY}:"
+        encoded_auth = base64.b64encode(auth_string.encode()).decode()
+        
         headers = {
-            "Authorization": f"Basic {XENDIT_SECRET_KEY}:",
+            "Authorization": f"Basic {encoded_auth}",
             "Content-Type": "application/json"
         }
         
         invoice_data = {
             "external_id": f"order_{order.id}",
-            "amount": total_amount,
+            "amount": int(total_amount),  # Xendit expects integer amount in cents
             "payer_email": order_data.user_email,
             "description": f"Order #{order.id[:8]}",
             "currency": "IDR",
-            "payment_methods": ["CREDIT_CARD", "BANK_TRANSFER", "QRIS", "EWALLET"]
+            "payment_methods": ["CREDIT_CARD", "BANK_TRANSFER", "QRIS", "EWALLET"],
+            "success_redirect_url": "https://example.com/success",
+            "failure_redirect_url": "https://example.com/failure"
         }
         
         response = requests.post(
             "https://api.xendit.co/v2/invoices",
             headers=headers,
-            json=invoice_data
+            json=invoice_data,
+            timeout=30
         )
         
         if response.status_code == 200:
@@ -436,12 +445,18 @@ async def create_order(order_data: OrderCreate, session_id: Optional[str] = None
             return {
                 "order_id": order.id,
                 "payment_url": invoice["invoice_url"],
-                "total_amount": total_amount
+                "total_amount": total_amount,
+                "xendit_invoice_id": invoice["id"]
             }
         else:
-            raise HTTPException(status_code=400, detail="Failed to create payment")
+            logging.error(f"Xendit API Error: {response.status_code} - {response.text}")
+            raise HTTPException(status_code=400, detail=f"Failed to create payment: {response.text}")
     
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Xendit API Request Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Payment service unavailable: {str(e)}")
     except Exception as e:
+        logging.error(f"Payment creation error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Payment creation failed: {str(e)}")
 
 @api_router.get("/orders/{order_id}")

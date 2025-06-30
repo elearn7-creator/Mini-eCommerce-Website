@@ -246,6 +246,9 @@ async def get_products(category: Optional[str] = None, limit: int = 20, skip: in
         query["category"] = category
     
     products = await db.products.find(query).skip(skip).limit(limit).to_list(limit)
+    # Remove MongoDB _id field to avoid serialization issues
+    for product in products:
+        product.pop('_id', None)
     return [Product(**product) for product in products]
 
 @api_router.get("/products/{product_id}", response_model=Product)

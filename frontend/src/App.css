@@ -1,38 +1,287 @@
-.App {
-    text-align: center;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }
 
-.App-link {
-    color: #61dafb;
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Custom utilities */
+.aspect-w-16 {
+  position: relative;
+  padding-bottom: calc(9 / 16 * 100%);
+}
+
+.aspect-w-16 > * {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* Button hover effects */
+.btn-primary {
+  @apply bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-blue-700 hover:shadow-lg hover:scale-105;
+}
+
+.btn-secondary {
+  @apply bg-gray-100 text-gray-900 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-gray-200 hover:shadow-lg;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-2;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply animate-spin rounded-full border-4 border-blue-200 border-t-blue-600;
+}
+
+/* Success/Error states */
+.alert-success {
+  @apply bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative;
+}
+
+.alert-error {
+  @apply bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative;
+}
+
+.alert-warning {
+  @apply bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative;
+}
+
+/* Indonesian Rupiah currency formatting */
+.currency-idr::before {
+  content: "IDR ";
+  font-weight: normal;
+}
+
+/* Responsive text */
+@screen sm {
+  .text-responsive {
+    font-size: 1.125rem;
+  }
+}
+
+@screen md {
+  .text-responsive {
+    font-size: 1.25rem;
+  }
+}
+
+@screen lg {
+  .text-responsive {
+    font-size: 1.5rem;
+  }
+}
+
+/* Payment method icons */
+.payment-icon {
+  @apply w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-xs;
+}
+
+.payment-icon.qris {
+  @apply bg-gradient-to-r from-red-500 to-red-600;
+}
+
+.payment-icon.bank {
+  @apply bg-gradient-to-r from-green-500 to-green-600;
+}
+
+.payment-icon.card {
+  @apply bg-gradient-to-r from-blue-500 to-blue-600;
+}
+
+.payment-icon.ewallet {
+  @apply bg-gradient-to-r from-purple-500 to-purple-600;
+}
+
+/* Product category badges */
+.category-badge {
+  @apply inline-block px-2 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+}
+
+.category-badge.subscription {
+  @apply bg-purple-100 text-purple-800;
+}
+
+.category-badge.package {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.category-badge.product {
+  @apply bg-green-100 text-green-800;
+}
+
+/* Cart dropdown animation */
+.cart-dropdown {
+  @apply transform transition-all duration-200 ease-out;
+}
+
+.cart-dropdown.show {
+  @apply translate-y-0 opacity-100;
+}
+
+.cart-dropdown.hide {
+  @apply -translate-y-2 opacity-0;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+  backdrop-filter: blur(4px);
+}
+
+/* Hero section background */
+.hero-bg {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+}
+
+/* Floating elements */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Indonesian theme colors */
+.indonesia-red {
+  @apply bg-red-600 text-white;
+}
+
+.indonesia-white {
+  @apply bg-white text-gray-900;
+}
+
+/* Xendit branding colors */
+.xendit-blue {
+  @apply bg-blue-600 text-white;
+}
+
+.xendit-light-blue {
+  @apply bg-blue-100 text-blue-800;
+}
+
+/* Grid layout helpers */
+.product-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+}
+
+/* Responsive padding */
+.section-padding {
+  @apply py-12 md:py-16 lg:py-20;
+}
+
+.container-padding {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+/* Focus states for accessibility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .auto-dark {
+    @apply bg-gray-900 text-white;
+  }
+}
+
+/* Mobile-first responsive utilities */
+.mobile-center {
+  @apply text-center md:text-left;
+}
+
+.mobile-stack {
+  @apply flex flex-col md:flex-row;
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Indonesian number formatting */
+.number-id {
+  font-variant-numeric: lining-nums;
+}
+
+/* Success checkmark animation */
+@keyframes checkmark {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.checkmark {
+  animation: checkmark 0.6s ease-in-out;
 }

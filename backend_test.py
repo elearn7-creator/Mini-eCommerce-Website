@@ -279,6 +279,10 @@ def run_tests():
         print("No product ID available. Cart and order tests will be skipped.")
         return
     
+    # Test both user-based and session-based flows
+    
+    # 1. Test user-based flow (authenticated)
+    print("\n=== Testing User-Based Flow ===")
     # Register a new user
     token, user_id, email = test_user_registration()
     
@@ -288,29 +292,50 @@ def run_tests():
         email = "test@example.com"
         token, user_id = test_user_login(email)
     
-    # Generate a session ID for non-authenticated tests
-    session_id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=32))
-    
-    # Test cart functionality
-    if product_id:
+    if user_id and product_id:
         # Add item to cart
-        add_success = test_add_to_cart(product_id, session_id, user_id)
+        add_success = test_add_to_cart(product_id, None, user_id)
         
-        # Get cart
-        cart = test_get_cart(session_id, user_id)
+        # Get cart - This was failing due to ObjectId serialization
+        cart = test_get_cart(None, user_id)
         
         # Test remove from cart if there are items
         if cart and cart.get("items"):
             item_id = cart["items"][0]["id"]
             test_remove_from_cart(item_id)
+            # Add item back to cart for order test
+            test_add_to_cart(product_id, None, user_id)
         
-        # Add item back to cart for order test
-        if add_success:
-            test_add_to_cart(product_id, session_id, user_id)
-        
-        # Create order
+        # Create order with Xendit payment - This was failing
         if email:
-            test_create_order(email, session_id, user_id)
+            order = test_create_order(email, None, user_id)
+            if order:
+                print(f"Order created successfully with payment URL: {order.get('payment_url')}")
+    
+    # 2. Test session-based flow (guest)
+    print("\n=== Testing Session-Based Flow ===")
+    # Generate a session ID for non-authenticated tests
+    session_id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=32))
+    guest_email = generate_random_email()
+    
+    if product_id:
+        # Add item to cart
+        add_success = test_add_to_cart(product_id, session_id, None)
+        
+        # Get cart - This was failing due to ObjectId serialization
+        cart = test_get_cart(session_id, None)
+        
+        # Test remove from cart if there are items
+        if cart and cart.get("items"):
+            item_id = cart["items"][0]["id"]
+            test_remove_from_cart(item_id)
+            # Add item back to cart for order test
+            test_add_to_cart(product_id, session_id, None)
+        
+        # Create order with Xendit payment - This was failing
+        order = test_create_order(guest_email, session_id, None)
+        if order:
+            print(f"Guest order created successfully with payment URL: {order.get('payment_url')}")
     
     # Test subscription plans
     test_get_subscription_plans()

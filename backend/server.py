@@ -256,6 +256,8 @@ async def get_product(product_id: str):
     product = await db.products.find_one({"id": product_id})
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
+    # Remove MongoDB _id field to avoid serialization issues
+    product.pop('_id', None)
     return Product(**product)
 
 @api_router.post("/products", response_model=Product)

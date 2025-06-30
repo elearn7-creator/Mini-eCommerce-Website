@@ -218,11 +218,11 @@ backend:
 
   - task: "Create Order with Xendit Payment"
     implemented: true
-    working: false
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         -working: "NA"
         -agent: "main"
@@ -230,6 +230,9 @@ backend:
         -working: false
         -agent: "testing"
         -comment: "Create order endpoint is not working correctly. Failed to create an order with Xendit payment. This could be due to issues with the Xendit API integration or cart functionality."
+        -working: true
+        -agent: "testing"
+        -comment: "Create order endpoint is now working correctly. Successfully created orders with Xendit payment integration for both user-based and session-based flows. Xendit invoices are being created successfully and payment URLs are returned."
 
   - task: "Get Subscription Plans"
     implemented: true

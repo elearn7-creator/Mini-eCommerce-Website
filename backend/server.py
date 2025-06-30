@@ -318,8 +318,14 @@ async def get_cart(session_id: Optional[str] = None, user_id: Optional[str] = No
     total = 0
     
     for item in cart_items:
+        # Remove MongoDB _id field to avoid serialization issues
+        item.pop('_id', None)
+        
         product = await db.products.find_one({"id": item["product_id"]})
         if product:
+            # Remove MongoDB _id field from product as well
+            product.pop('_id', None)
+            
             item_total = item["quantity"] * item["price"]
             total += item_total
             items_with_products.append({

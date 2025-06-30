@@ -280,3 +280,5 @@ test_plan:
 agent_communication:
     -agent: "testing"
     -message: "Completed testing of the e-commerce backend API endpoints. Most endpoints are working correctly, but there are issues with the View Cart and Create Order with Xendit Payment endpoints. The View Cart endpoint is failing, which also prevents testing of the Remove from Cart functionality. The Create Order endpoint is also failing, possibly due to issues with the Xendit API integration or cart functionality."
+    -agent: "testing"
+    -message: "Retested the previously failing endpoints. All endpoints are now working correctly! The View Cart endpoint now properly handles MongoDB ObjectId serialization, and the Create Order endpoint successfully integrates with Xendit payment. Both user-based (authenticated) and session-based (guest) flows were tested and are working as expected."

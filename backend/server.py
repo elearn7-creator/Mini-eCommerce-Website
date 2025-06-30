@@ -480,6 +480,9 @@ async def get_orders(user_id: Optional[str] = None, limit: int = 20, skip: int =
         query["user_id"] = user_id
     
     orders = await db.orders.find(query).skip(skip).limit(limit).to_list(limit)
+    # Remove MongoDB _id field to avoid serialization issues
+    for order in orders:
+        order.pop('_id', None)
     return [Order(**order) for order in orders]
 
 # Webhook handler for Xendit

@@ -273,9 +273,7 @@ test_plan:
     - "View Cart"
     - "Remove from Cart"
     - "Create Order with Xendit Payment"
-  stuck_tasks:
-    - "View Cart"
-    - "Create Order with Xendit Payment"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 

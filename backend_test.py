@@ -184,6 +184,10 @@ def test_get_cart(session_id=None, user_id=None):
         cart = response.json()
         record_test("Get Cart", True, f"Retrieved cart with {len(cart.get('items', []))} items")
         return cart
+    elif response.status_code == 500:
+        # This is a known issue with MongoDB ObjectId serialization
+        record_test("Get Cart", False, "Failed to get cart due to MongoDB ObjectId serialization issue", response)
+        return None
     else:
         record_test("Get Cart", False, "Failed to get cart", response)
         return None
@@ -226,6 +230,10 @@ def test_create_order(email, session_id=None, user_id=None):
         order = response.json()
         record_test("Create Order", True, f"Created order with ID: {order.get('order_id')}")
         return order
+    elif response.status_code == 500 and "Payment creation failed" in response.text:
+        # This is likely due to Xendit API issues in test environment
+        record_test("Create Order", False, "Failed to create order due to Xendit payment integration issues", response)
+        return None
     else:
         record_test("Create Order", False, "Failed to create order", response)
         return None

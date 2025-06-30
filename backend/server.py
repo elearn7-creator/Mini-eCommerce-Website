@@ -536,6 +536,9 @@ async def xendit_webhook(request: Request):
 @api_router.get("/subscription-plans", response_model=List[SubscriptionPlan])
 async def get_subscription_plans():
     plans = await db.subscription_plans.find().to_list(100)
+    # Remove MongoDB _id field to avoid serialization issues
+    for plan in plans:
+        plan.pop('_id', None)
     return [SubscriptionPlan(**plan) for plan in plans]
 
 @api_router.post("/subscription-plans", response_model=SubscriptionPlan)

@@ -200,11 +200,11 @@ backend:
 
   - task: "Remove from Cart"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         -working: "NA"
         -agent: "main"
@@ -212,6 +212,9 @@ backend:
         -working: "NA"
         -agent: "testing"
         -comment: "Could not test remove from cart functionality because view cart is not working."
+        -working: true
+        -agent: "testing"
+        -comment: "Remove from cart endpoint is now working correctly. Successfully removed items from the cart for both user-based and session-based flows."
 
   - task: "Create Order with Xendit Payment"
     implemented: true

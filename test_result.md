@@ -182,11 +182,11 @@ backend:
 
   - task: "View Cart"
     implemented: true
-    working: false
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         -working: "NA"
         -agent: "main"
@@ -194,6 +194,9 @@ backend:
         -working: false
         -agent: "testing"
         -comment: "View cart endpoint is not working correctly. Failed to retrieve cart contents. This could be due to session management issues or database connectivity problems."
+        -working: true
+        -agent: "testing"
+        -comment: "View cart endpoint is now working correctly. The MongoDB ObjectId serialization issue has been fixed. Successfully retrieved cart contents for both user-based and session-based flows."
 
   - task: "Remove from Cart"
     implemented: true
